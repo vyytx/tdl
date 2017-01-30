@@ -452,9 +452,9 @@ if(tdCollection.find().length != 0){
   function count(){
     var left = $('#todo-list li').length - $('#todo-list li.completed').length;
     $('strong').text(left);
-	  if(left==tdCollection.find().length){
+	  if(left == 0){
 	  	$('#toggle-all').prop('checked', true);
-	  }else{
+	  }else if(left >=0){
 	  	$('#toggle-all').prop('checked', false);
 	  }
   }
