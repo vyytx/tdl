@@ -462,8 +462,8 @@ tdCollection.load(function(){
   });
 	
   $('btn1').on('click', function(){
-      var td = $(this).closest('#new-todo');
-      var val = $(td).val();
+      var td = $(this).closest('header');
+      var val = $(td).find('input').val();
       var filter0 = /.+/;
       var filter1 = true;
       if(val[0] == " " || val[val.length-1] == " "){
