@@ -463,8 +463,7 @@ tdCollection.load(function(){
   });
 	
   $('btn1').on('click', function(){
-      var td = $(this).closest('header');
-      var val = $(td).find('input').val();
+      var val = $('#new-todo').val();
       var filter0 = /.+/;
       var filter1 = true;
       if(val[0] == " " || val[val.length-1] == " "){
