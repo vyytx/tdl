@@ -461,8 +461,9 @@ tdCollection.load(function(){
     }
   });
 	
-  $('.btn-success').on('click', function(){
+  $('btn1').on('click', function(){
       var val = $(this).val();
+	  alert(val);
       var filter0 = /.+/;
       var filter1 = true;
       if(val[0] == " " || val[val.length-1] == " "){
