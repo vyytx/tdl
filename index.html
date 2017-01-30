@@ -13,7 +13,7 @@
 	<section id="todoapp">
 	  <header>
 		<h1>Todos</h1>
-		<input id="new-todo" placeholder="What needs to be done?" autofocus>
+		<input id="new-todo" placeholder="What needs to be done?" autofocus><btn1 class="btn btn-success">Success</btn1>
 	  </header>
       
       <section id="main">
@@ -397,6 +397,16 @@ btn{
   cursor:pointer;
   line-height: 50%;
 }
+btn1{
+  position: absolute;
+  top: 0;
+  right: 20px;
+  bottom: 25%;
+  height: 50%;
+  margin: auto 0;
+  cursor:pointer;
+  line-height: 50%;
+}
   </style>
   <script>
     var fdb = new ForerunnerDB();
@@ -449,6 +459,22 @@ tdCollection.load(function(){
         count();
       }
     }
+  });
+	
+  $('.btn-success').on('click', function(){
+      var val = $(this).val();
+      var filter0 = /.+/;
+      var filter1 = true;
+      if(val[0] == " " || val[val.length-1] == " "){
+        filter1 = false;
+      }
+      if(filter0.test(val) && filter1){
+        $('#todo-list').append(template(val));
+        tdCollection.insert({val:val,com:false});
+        tdCollection.save();
+        $(this).val('');
+        count();
+      }
   });
 
   $('#todo-list').on('click', 'button', function(){
