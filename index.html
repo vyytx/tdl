@@ -473,7 +473,7 @@ tdCollection.load(function(){
         tdCollection.insert({val:val,com:false});
         $('#todo-list').append(template(val,false,tdCollection.find()[tdCollection.find().length-1]._id));
         tdCollection.save();
-        $(this).val('');
+        $('#todo-list').val('');
         count();
       }
   });
