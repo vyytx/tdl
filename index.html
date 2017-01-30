@@ -426,7 +426,7 @@ tdCollection.load(function(){
     $('#todo-list').append(template(td[i].val, td[i].com, td[i]._id));
     tdCollection.save();
     var tg = $('.toggle').get(i);
-    if(!$(tg).prop("checked"))
+    if(!$(tg).prop("checked") || $(tg).length == 0)
       iss = false;
   }
   $('#toggle-all').prop('checked', iss);
