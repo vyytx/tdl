@@ -420,7 +420,7 @@ $('body').hide();
 $('#myModal').hide();
 
 tdCollection.load(function(){
-
+if(tdCollection.find().length != 0){
   for(var i = 0; i < tdCollection.find().length; i++){
     var td = tdCollection.find();
     $('#todo-list').append(template(td[i].val, td[i].com, td[i]._id));
@@ -428,11 +428,12 @@ tdCollection.load(function(){
     var tg = $('.toggle').get(i);
     if(!$(tg).prop("checked")){
     	iss = false;
-	}
-	if(tdCollection.find().length == 0){
-		iss = false;
-	}
+    }
   }
+}else{
+	iss = false;
+}
+				  
   $('#toggle-all').prop('checked', iss);
 	
   $('body').show();
