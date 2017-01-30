@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="description" content="jQuery - Todo">
+	  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+	  <script src="https://code.jquery.com/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://vyytx.github.io/Charge-App/js/fdb.js"></script>
+  </head>
+  <body>
+	<section id="todoapp">
+	  <header>
+		<h1>Todos</h1>
+		<input id="new-todo" placeholder="What needs to be done?" autofocus>
+	  </header>
+      
+      <section id="main">
+        <input id="toggle-all" type="checkbox">
+        <ul id="todo-list">
+        </ul>
+      </section>
+      
+	  <footer>
+	    <span id="todo-count"><strong>0</strong> left</span>
+			<ul id="filters">
+				<li>
+					<a class='selected' data-choice='all'>All</a>
+				</li>
+				<li>
+					<a data-choice='active'>Active</a>
+				</li>
+				<li>
+					<a data-choice='completed'>Comp</a>
+				</li>
+			</ul>
+			<button id="clear-completed">Clear comp</button>
+	  </footer>
+	</section>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+          </div>
+          <div class="modal-body">
+            <p1></p1>
+            <input id="ip" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Success</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  
+  <style>
+    *{
+  font-weight: 400;
+  font-family: "Helvetica Neue", Helvetica, Arial, "微軟正黑體", "微软雅黑", "メイリオ", "맑은 고딕", sans-serif;
+}
+
+html,body,button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+button {
+  background: none;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  appearance: none;
+}
+
+body {
+	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	line-height: 1.4em;
+	background: #f5f5f5;
+	color: #4d4d4d;
+    width:90%;
+	margin: 0 auto;
+	font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+}
+
+button,
+input[type="checkbox"] {
+	outline: none;
+}
+
+.hidden {
+	display: none;
+}
+
+#todoapp {
+	background: #fff;
+	margin: 130px 0 40px 0;
+	position: relative;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+	            0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+#todoapp input::-webkit-input-placeholder {
+	font-style: italic;
+	font-weight: 300;
+	color: #e6e6e6;
+}
+
+#todoapp input::input-placeholder {
+	font-style: italic;
+	font-weight: 300;
+	color: #e6e6e6;
+}
+
+#todoapp h1 {
+	position: absolute;
+	top: -155px;
+	width: 100%;
+	font-size: 100px;
+	font-weight: 100;
+	text-align: center;
+	color: rgba(175, 47, 47, 0.15);
+	-webkit-text-rendering: optimizeLegibility;
+	-moz-text-rendering: optimizeLegibility;
+	text-rendering: optimizeLegibility;
+}
+
+#new-todo,
+.edit {
+	position: relative;
+	margin: 0;
+	width: 100%;
+	font-size: 24px;
+	font-family: inherit;
+	font-weight: inherit;
+	line-height: 1.4em;
+	border: 0;
+	outline: none;
+	color: inherit;
+	padding: 6px;
+	border: 1px solid #999;
+	box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-font-smoothing: antialiased;
+	font-smoothing: antialiased;
+}
+
+#new-todo {
+	padding: 16px 16px 16px 60px;
+	border: none;
+	background: rgba(0, 0, 0, 0.003);
+	box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
+}
+
+#main {
+	position: relative;
+	z-index: 2;
+	border-top: 1px solid #e6e6e6;
+}
+
+label[for='toggle-all'] {
+	display: none;
+}
+
+#toggle-all {
+	position: absolute;
+	top: -55px;
+	left: -12px;
+	width: 60px;
+	height: 34px;
+    transform: rotate(90deg);
+    -webkit-appearance: none;
+	text-align: center;
+}
+
+#toggle-all:before {
+	content: '❯';
+	font-size: 22px;
+	color: #e6e6e6;
+	padding: 10px 27px 10px 27px;
+}
+
+#toggle-all:checked:before {
+	color: #737373;
+}
+
+#todo-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#todo-list li {
+	position: relative;
+	font-size: 24px;
+	border-bottom: 1px solid #ededed;
+    font-weight:400;
+}
+
+#todo-list li:last-child {
+	border-bottom: none;
+}
+
+#todo-list li.editing {
+	border-bottom: none;
+	padding: 0;
+}
+
+#todo-list li.editing .edit {
+	display: block;
+	width: 506px;
+	padding: 13px 17px 12px 17px;
+	margin: 0 0 0 43px;
+}
+
+#todo-list li.editing .view {
+	display: none;
+}
+
+#todo-list li .toggle {
+	text-align: center;
+	width: 40px;
+	/* auto, since non-WebKit browsers doesn't support input styling */
+	height: 40px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin: auto 0;
+	border: none; /* Mobile Safari */
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+#todo-list li .toggle:after {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
+}
+
+#todo-list li .toggle:checked:after {
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
+}
+
+#todo-list li label {
+	white-space: pre;
+	word-break: break-word;
+	padding: 15px 60px 15px 15px;
+	margin-left: 45px;
+	display: block;
+	line-height: 1.2;
+	transition: color 0.4s;
+}
+
+#todo-list li.completed label {
+	color: #d9d9d9;
+	text-decoration: line-through;
+}
+
+#todo-list li .destroy {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 10px;
+	bottom: 0;
+	width: 40px;
+	height: 40px;
+	margin: auto 0;
+	font-size: 30px;
+	color: #cc9a9a;
+	margin-bottom: 11px;
+	transition: color 0.2s ease-out;
+    cursor:pointer;
+}
+
+#todo-list li .destroy:hover {
+	color: #af5b5e;
+}
+
+#todo-list li .destroy:after {
+	content: '×';
+}
+
+#todo-list li:hover .destroy {
+	display: block;
+}
+
+#todo-list li .edit {
+	display: none;
+}
+
+#todo-list li.editing:last-child {
+	margin-bottom: -1px;
+}
+
+footer {
+	color: #777;
+	padding: 10px 15px;
+	height: 40px;
+	text-align: center;
+	border-top: 1px solid #e6e6e6;
+}
+
+#todo-count {
+	float: left;
+	text-align: left;
+}
+
+#filters {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: absolute;
+	right: 0;
+	left: 0;
+}
+
+#filters li {
+	display: inline;
+    cursor: pointer;
+}
+
+#filters li a {
+	color: rgba(37, 37, 37, 0.6);
+	margin: 0px;
+	padding: 3px 3px;
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+}
+
+#filters li a.selected,
+#filters li a:hover {
+	border-color: rgba(175, 47, 47, 0.3);
+    color: rgba(37, 37, 37, 0.72);
+}
+
+#filters li a.selected {
+	border-color: rgba(175, 47, 47, 0.5);
+    color: rgba(37, 37, 37, 0.94);
+}
+
+#clear-completed,
+html #clear-completed:active {
+	float: right;
+	position: relative;
+	line-height: 20px;
+	text-decoration: none;
+	cursor: pointer;
+	position: relative;
+}
+
+#clear-completed:hover {
+	text-decoration: underline;
+}
+
+.view,.toggle,label{
+  cursor:pointer;
+}
+
+.modal{
+  margin-top:10%;
+}
+
+p{
+  font-weight: 400;
+  font-family: "Helvetica Neue", Helvetica, Arial, "微軟正黑體", "微软雅黑", "メイリオ", "맑은 고딕", sans-serif;
+  font-size: 24px;
+}
+
+.div{
+  white-space: nowrap;
+  display:inline-block;
+}
+
+.label{
+  right 10px;
+}
+
+btn{
+  position: absolute;
+  top: 0;
+  right: 50px;
+  bottom: 25%;
+  height:50%;
+  margin: auto 0;
+  cursor:pointer;
+}
+}
+  </style>
+  <script>
+    var fdb = new ForerunnerDB();
+var db = fdb.db("DB");
+var tdCollection = db.collection("td");
+var iss = true;
+$('body').hide();
+
+tdCollection.load(function(){
+
+  for(var i = 0; i < tdCollection.find().length; i++){
+    var td = tdCollection.find();
+    $('#todo-list').append(template(td[i].val, td[i].com, td[i]._id));
+    tdCollection.save();
+    var tg = $('.toggle').get(i);
+    if(!$(tg).prop("checked"))
+      iss = false;
+  }
+  $('#toggle-all').prop('checked', iss);
+  $('body').show();
+  var ENTER_KEY = 13;
+  
+  function template(val, com, id){
+    if(com){
+      return '<li class="completed" data-id=' + id + '><div class="view"><input class="toggle" type="checkbox" checked=true><label>' + val + '</label><btn class="btn btn-info">edit</btn><button class="destroy"></button></div></li>';
+    }else{
+      return '<li data-id=' + id + '><div class="view div"><input class="toggle" type="checkbox"><label>' + val + '</label><btn class="btn btn-info">edit</btn><button class="destroy"></button></div></li>';
+    }
+  }
+
+  function count(){
+    var left = $('#todo-list li').length - $('#todo-list li.completed').length;
+    $('strong').text(left);
+  }
+
+  $('#new-todo').on('keydown', function(e){
+    if (e.which == ENTER_KEY){
+      var val = $(this).val();
+      var filter0 = /.+/;
+      var filter1 = true;
+      if(val[0] == " " || val[val.length-1] == " "){
+        filter1 = false;
+      }
+      if(filter0.test(val) && filter1){
+        $('#todo-list').append(template(val));
+        tdCollection.insert({val:val,com:false});
+        tdCollection.save();
+        $(this).val('');
+        count();
+      }
+    }
+  });
+
+  $('#todo-list').on('click', 'button', function(){
+    $(this).closest('li').remove();
+    var id = jQuery(this).closest('li').data('id');
+    tdCollection.removeById(id);
+    tdCollection.save();
+    count();
+  });
+
+  $('#todo-list').on('click', 'input', function(){
+    $(this).closest('li').toggleClass('completed');
+    var li = $(this).closest('li');
+    var la = $(this).closest('lable');
+    var id = jQuery(this).closest(li).data('id');
+    if ( $( this ).is( ":checked" ) ){
+      tdCollection.updateById(id, {_id: id, com:true});
+    }else{
+      tdCollection.updateById(id, {_id: id, com:false});
+    }
+    tdCollection.save();
+    count();
+  });
+
+  $('#clear-completed').on('click', function(){
+    var time = $('li.completed').length
+    for(var i = 0; i<=time; i++){
+      var id = jQuery('li.completed').first().data('id');
+      tdCollection.removeById(id);
+      tdCollection.save();
+      $('li.completed').first().remove();
+    }
+    $('#toggle-all').prop('checked', false);
+    tdCollection.save();
+    count();
+  });
+
+  $('#toggle-all').on('click', function(){
+    var todos = $('#todo-list li');
+    if (this.checked){
+      todos.addClass('completed');
+      todos.find('input').prop('checked', true);
+      for(var i = 0; i<=todos.find('input').length; i++){
+        var elem = $('li').get(i);
+        var id = jQuery(elem).data('id');
+        tdCollection.updateById(id, {_id: id, com:true});
+        tdCollection.save();
+      }
+      tdCollection.save();
+    }else {
+      todos.removeClass('completed');
+      todos.find('input').prop('checked', false);
+      for(var _i = 0; _i<=todos.find('input').length; _i++){
+        var _elem = $('li').get(_i);
+        var _id = jQuery(_elem).data('id');
+        tdCollection.updateById(_id, {_id: _id, com:false});
+        tdCollection.save();
+      }
+      tdCollection.save();
+    }
+    count();
+  });
+
+  $('#filters').on('click', 'a', function(){
+    var $this = $(this);
+    var todos = $('#todo-list li');
+  
+    $('#filters').find('a').removeClass('selected');
+    $this.addClass('selected');
+  
+    if ($this.data('choice') == 'all'){
+      todos.show();
+    }
+    else if ($this.data('choice') == 'active'){
+      todos.hide();
+      todos.not('.completed').show();
+    }
+    else if ($this.data('choice') == 'completed'){
+      todos.hide();
+      $('.completed').show();
+    }
+    count();
+    });
+
+  $('body').on('click', 'label', function(){
+    var li = $(this).closest('li');
+    var thiss = $(this);
+    li.find('input').click();
+  });
+  
+  $('body').on('click', 'btn', function(){
+    var li = $(this).closest('li');
+    var id = jQuery(this).closest('li').data('id');
+    li.addClass('on');
+    $('p1').html('<p data-id=' + id + '></p>')
+    $('p').text('Edit "' + li.find('label').text() + '" to:');
+    $('#myModal').modal();
+  });
+  
+  $('.btn-primary').click(function(){
+    var id = $('p').data("id");
+    tdCollection.updateById(id, {_id: id, val:$('#ip').val()});
+    if(tdCollection.findById(id,undefined).com){
+      $('.on').html('<div class="view"><input class="toggle" type="checkbox" checked=true><label>' + $('#ip').val() + '</label><btn class="btn btn-info">edit</btn><button class="destroy"></button></div>');
+    }else{
+      $('.on').html('<div class="view div"><input class="toggle" type="checkbox"><label>' + $('#ip').val() + '</label><btn class="btn btn-info">edit</btn><button class="destroy"></button></div>');
+    }
+    $('.on').removeClass('on');
+    $('#ip').val('');
+    tdCollection.save();
+  });
+  
+  $('.btn-default').click(function(){
+    $('.on').removeClass('on');
+    $('#ip').val('');
+  });
+  
+});
+  </script>
+</html>
