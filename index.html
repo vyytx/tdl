@@ -426,8 +426,12 @@ tdCollection.load(function(){
     $('#todo-list').append(template(td[i].val, td[i].com, td[i]._id));
     tdCollection.save();
     var tg = $('.toggle').get(i);
-    if(!$(tg).prop("checked") || tdCollection.find().length == 0)
-      iss = false;
+    if(!$(tg).prop("checked")){
+    	iss = false;
+	}
+	if(tdCollection.find().length == 0){
+		iss = false;
+	}
   }
   $('#toggle-all').prop('checked', iss);
 	
