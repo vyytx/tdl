@@ -14,7 +14,7 @@
 	  <header>
 		<h1>Todos</h1>
 		<div><btn1 class="btn btn-success">Success</btn1></div>
-		<input type='text' id="new-todo" placeholder="What needs to be done?" autofocus>
+		<input id="new-todo" placeholder="What needs to be done?" autofocus>
 	  </header>
       
       <section id="main">
@@ -462,7 +462,7 @@ tdCollection.load(function(){
   });
 	
   $('btn1').on('click', function(){
-      var val = $(this).closest('input[type=text]').val();
+      var val = $(this).closest('#new-todo').val();
       var filter0 = /.+/;
       var filter1 = true;
       if(val[0] == " " || val[val.length-1] == " "){
