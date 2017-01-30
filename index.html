@@ -452,8 +452,8 @@ tdCollection.load(function(){
         filter1 = false;
       }
       if(filter0.test(val) && filter1){
-        $('#todo-list').append(template(val));
-        tdCollection.insert({val:val,com:false});
+		tdCollection.insert({val:val,com:false});
+        $('#todo-list').append(template(val,false,tdCollection[this.length-1]._id));
         tdCollection.save();
         $(this).val('');
         count();
@@ -462,15 +462,15 @@ tdCollection.load(function(){
   });
 	
   $('btn1').on('click', function(){
-      var val = $(this.closest('input[type=text]')).val();
+      var val = $(this).closest('input[type=text]').val();
       var filter0 = /.+/;
       var filter1 = true;
       if(val[0] == " " || val[val.length-1] == " "){
         filter1 = false;
       }
       if(filter0.test(val) && filter1){
-        $('#todo-list').append(template(val));
         tdCollection.insert({val:val,com:false});
+        $('#todo-list').append(template(val,false,tdCollection[this.length-1]._id));
         tdCollection.save();
         $(this).val('');
         count();
